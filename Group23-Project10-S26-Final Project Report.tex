@@ -1,6 +1,3 @@
-% CSE 573: submit PDF named: Group23-Project10-S26-Final Project Report.pdf
-% Source: compile from repository root so \graphicspath{EVALUATIONS/...} resolves:
-%   pdflatex "Group23-Project10-S26-Final Project Report.tex" (run twice)
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
 
@@ -156,55 +153,13 @@ The repository is organized into three top-level folders: \texttt{CODE/} (Python
 
 The runtime entry point is \texttt{CODE/main.py}. Fig.~\ref{fig:pipeline} lists Steps~1--8 in the exact order the script runs them (including E4 before E3); plots and metrics land under \texttt{EVALUATIONS/}. Per \texttt{README.md}, run commands from the repository root (for example \texttt{python CODE/main.py}). Long hyperparameter searches may require adjusting parallel backend settings on some operating systems.
 
-\begin{figure}[!htbp]
+
+\begin{figure*}[htbp]
 \centering
-\resizebox{\linewidth}{!}{%
-\begin{tikzpicture}[node distance=0.34cm and 0.3cm]
-
-  \node[io] (csv) {BankSim CSV\\594,643 rows};
-
-  \node[block, below=of csv] (prep)
-    {\textbf{Step 1}\\\texttt{CODE/preprocessing.py}\\Clean, encode, scale\\SMOTE-ENN print + time-split tensors};
-
-  \node[block, below=of prep] (eda)
-    {\textbf{Step 2}\\\texttt{CODE/eda.py}\\7 EDA plots};
-
-  \node[exp, below=of eda] (e1)
-    {\textbf{Step 3}\\\texttt{CODE/models.py}\\E1 baselines};
-
-  \node[exp, below=of e1] (graph)
-    {\textbf{Step 4}\\\texttt{CODE/graph.py}\\Neo4j load + graph CSV};
-
-  \node[exp, below=of graph] (hybrid)
-    {\textbf{Step 5}\\\texttt{CODE/hybrid\_models.py}\\E2 tabular + graph features};
-
-  \node[exp, below=of hybrid] (e4)
-    {\textbf{Step 6}\\\texttt{CODE/graphsage.py}\\E4 end-to-end GNN};
-
-  \node[exp, below=of e4] (e3)
-    {\textbf{Step 7}\\\texttt{CODE/embedding\_models.py}\\E3 embeddings + RF/MLP};
-
-  \node[exp, below=of e3] (e5)
-    {\textbf{Step 8}\\\texttt{CODE/clustering.py}\\E5 K-Means + DBSCAN};
-
-  \node[out, below=of e5] (out)
-    {\texttt{EVALUATIONS/}\\plots \& CSVs\\\texttt{CODE/dashboard/}};
-
-  \draw[arrow] (csv)   -- (prep);
-  \draw[arrow] (prep)  -- (eda);
-  \draw[arrow] (eda)   -- (e1);
-  \draw[arrow] (e1)    -- (graph);
-  \draw[arrow] (graph) -- (hybrid);
-  \draw[arrow] (hybrid) -- (e4);
-  \draw[arrow] (e4)    -- (e3);
-  \draw[arrow] (e3)    -- (e5);
-  \draw[arrow] (e5)    -- (out);
-
-\end{tikzpicture}%
-}
-\caption{Linear view of \texttt{CODE/main.py}: Steps~1--8 run strictly top to bottom. E1/E2 reuse stratified splits after oversampling (Section~\ref{sec:arch}); Step~6 (E4) executes before Step~7 (E3). Artifacts land under \texttt{EVALUATIONS/}; the UI lives under \texttt{CODE/dashboard/}.}
-\label{fig:pipeline}
-\end{figure}
+\includegraphics[width=\textwidth]{Architecture.png}
+\caption{ Architecture Overview}
+\label{fig:e1_confusion}
+\end{figure*}
 
 \subsection{Preprocessing}
 
@@ -511,7 +466,7 @@ K-Means (k=5) achieves Silhouette = 0.6315 (good structure) and Purity = 0.9916 
 
 \begin{figure}[!htbp]
 \centering
-\includegraphics[width=\linewidth]{clustering/clustering_results.png}
+\includegraphics[width=\linewidth]{clustering_results.png}
 \caption{E5: 2$\times$2 clustering visualization. Top-left: K-Means cluster scatter (PCA-reduced, colored by cluster). Top-right: Per-cluster fraud rate bar chart - Cluster 4's 99.7\% bar stands dramatically above all others. Bottom-left: DBSCAN scatter with noise points highlighted. Bottom-right: Cluster size distribution showing Cluster 0 dominates with 439K legitimate transactions.}
 \label{fig:e5_clustering}
 \end{figure}
